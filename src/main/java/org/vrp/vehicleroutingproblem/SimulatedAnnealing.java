@@ -38,8 +38,10 @@ public class SimulatedAnnealing {
                 if(distanceAllNodes(best)>distanceAllNodes(curr)){
                     deepCopy(best,curr);
                 }
-            }else if(probabilityFormula(error,Tc)>random.nextInt(2)){
-                //deepCopy(curr,next);
+            }else if(probabilityFormula(error,Tc)>random.nextDouble(1)){
+                deepCopy(curr,next);
+                System.out.println("Prob:"+probabilityFormula(error,Tc));
+                System.out.println("random:"+random.nextDouble(1));
             }
             iter++;
         }

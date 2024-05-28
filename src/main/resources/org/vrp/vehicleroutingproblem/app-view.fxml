@@ -10,6 +10,6 @@
       <Canvas fx:id="canvas" height="373.0" layoutX="14.0" layoutY="14.0" onMouseClicked="#addNode" width="439.0" />
       <Button fx:id="btnJobs" layoutX="466.0" layoutY="30.0" mnemonicParsing="false" onAction="#runBtnJobs" prefHeight="58.0" prefWidth="120.0" text="GIVE JOBS" />
       <Button fx:id="btnPath" layoutX="466.0" layoutY="102.0" mnemonicParsing="false" onAction="#runBtnPath" prefHeight="58.0" prefWidth="120.0" text="PATH" />
-      <TextArea fx:id="textArea" layoutX="466.0" layoutY="169.0" onMouseClicked="#test" prefHeight="218.0" prefWidth="120.0" />
+      <TextArea fx:id="textArea" layoutX="466.0" layoutY="169.0" prefHeight="218.0" prefWidth="120.0" />
    </children>
 </AnchorPane>
