@@ -59,14 +59,26 @@ public class MainController {
                 textArea.appendText(n.capacity+"\n");
             }
         }
+        simAnneal.numberOfTrucks=data.getNumberOfUsedTrucks();
         draw.drawAll(data);
+        System.out.println("BEFORE");
+        System.out.println("===========");
         System.out.println(simAnneal.distanceAllNodes(data.trucks));
+        System.out.println("===========");
     }
     @FXML
     protected void runBtnPath(){
         System.out.println("test");
         simAnneal.run();
         draw.drawAll(data);
+        System.out.println("AFTER");
+        System.out.println("===========");
+        System.out.println(simAnneal.distanceAllNodes(data.trucks));
+        System.out.println("===========");
+    }
+    @FXML
+    protected void test(){
+
     }
 
 

@@ -1,6 +1,6 @@
 package org.vrp.vehicleroutingproblem;
 
-public class Node {
+public class Node implements Cloneable{
     double xPos;
     double yPos;
     int capacity;
@@ -11,6 +11,15 @@ public class Node {
         this.yPos=yPos;
         this.capacity=capacity;
         this.station=station;
+    }
+    @Override
+    public Node clone() {
+        try {
+            // Perform a shallow copy using super.clone()
+            return (Node) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new Error("Cloning failed", e);
+        }
     }
 
 }
