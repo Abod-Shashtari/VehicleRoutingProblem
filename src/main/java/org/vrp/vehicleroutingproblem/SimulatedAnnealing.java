@@ -4,16 +4,16 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class SimulatedAnnealing {
-    private final double initTemp;
+    //private final double initTemp;
     private final Data data;
     private final Random random;
     public int numberOfTrucks=0;
-    public SimulatedAnnealing(double initTemp,Data data){
-        this.initTemp=initTemp;
+    public SimulatedAnnealing(Data data){
+        //this.initTemp=initTemp;
         this.data=data;
         random=new Random();
     }
-    public void run(){
+    double run(double initTemp){
         ArrayList<Truck> curr=new ArrayList<>(data.trucks);
         ArrayList<Truck> best=new ArrayList<>();
         deepCopy(best,curr);
@@ -27,7 +27,7 @@ public class SimulatedAnnealing {
             System.out.println("TC:"+Tc);
 
             if(Tc<=2) break;
-            if(iter>=10000) break;
+            //if(iter>=10000) break;
             //find next
             randomSwap(next);
             error=distanceAllNodes(next)-distanceAllNodes(curr);
@@ -46,9 +46,11 @@ public class SimulatedAnnealing {
             iter++;
         }
         deepCopy(data.trucks,best);
+        return Tc;
     }
     private double calcTemp(int i,double T){
-        return (T/Math.log(i));
+        //return (T/Math.log(i));
+        return (T*Math.pow(0.99,i));
     }
     private double probabilityFormula(double error,double Tc){
         return Math.exp((-error)/(Tc));

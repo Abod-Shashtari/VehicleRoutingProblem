@@ -10,7 +10,7 @@ public class Truck implements Cloneable{
     ArrayList<Node> nodes;
     public Truck(Color color){
         nodes=new ArrayList<>();
-        capacity=10;
+        capacity=20;
         this.color=color;
     }
     public void reduceCapacity(int x){

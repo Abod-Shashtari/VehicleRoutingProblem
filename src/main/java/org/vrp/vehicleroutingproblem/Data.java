@@ -22,6 +22,15 @@ public class Data {
     public void addNode(Node node){
         nodes.add(node);
     }
+    public void clearData(){
+        freeNodes.clear();
+        nodes.clear();
+        trucks.clear();
+        currentNodeCapacitySum=0;
+        for (int i=0;i<10;++i){
+            trucks.add(new Truck(trucksColors[i]));
+        }
+    }
     public int getNumberOfUsedTrucks(){
         int count=0;
         for(Truck t : trucks){

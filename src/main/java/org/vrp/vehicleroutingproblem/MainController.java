@@ -18,6 +18,9 @@ public class MainController {
     private Button btnPath;
 
     @FXML
+    private TextField txtTemp;
+
+    @FXML
     private Canvas canvas;
     @FXML
     private TextArea textArea;
@@ -27,6 +30,7 @@ public class MainController {
     Data data;
     Draw draw;
     SimulatedAnnealing simAnneal;
+    double lastTemp =0;
 
     @FXML
     public void initialize() {
@@ -35,7 +39,7 @@ public class MainController {
         draw=new Draw(canvas,gc);
         draw.clearCanvas();
         data = new Data();
-        simAnneal=new SimulatedAnnealing(2000,data);
+        simAnneal=new SimulatedAnnealing(data);
     }
     @FXML
     protected void runBtnJobs(){
@@ -69,16 +73,26 @@ public class MainController {
     @FXML
     protected void runBtnPath(){
         System.out.println("test");
-        simAnneal.run();
-        draw.drawAll(data);
-        System.out.println("AFTER");
-        System.out.println("===========");
-        System.out.println(simAnneal.distanceAllNodes(data.trucks));
-        System.out.println("===========");
+        String txtTempStr=txtTemp.getText();
+        if(txtTempStr.isEmpty())
+            showMSG("PLEASE FILL THE INITIAL TEMPERATURE FIELD");
+        else {
+            double initTemp = Double.parseDouble(txtTemp.getText());
+            lastTemp=simAnneal.run(initTemp);
+            draw.drawAll(data);
+            System.out.println("AFTER");
+            System.out.println("===========");
+            System.out.println(simAnneal.distanceAllNodes(data.trucks));
+            System.out.println("===========");
+        }
     }
     @FXML
-    protected void test(){
-
+    protected void resetBtn(){
+        station=true;
+        draw.clearCanvas();
+        data.clearData();
+        textArea.setText("");
+        txtTemp.setText("");
     }
 
 
@@ -94,7 +108,7 @@ public class MainController {
         }else{
             int capacity=readCapacity();
             if(capacity==-1) return;
-            if(data.currentNodeCapacitySum+capacity>100){
+            if(data.currentNodeCapacitySum+capacity>200){
                 showMSG("Capacity Overflow!");
             }else {
                 Node node = new Node(mouseX, mouseY, capacity,false);
