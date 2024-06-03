@@ -22,19 +22,17 @@ public class MainController {
 
     @FXML
     private Canvas canvas;
-    @FXML
-    private TextArea textArea;
     boolean station=true;
+    int numberOfClicks=1;
 
     GraphicsContext gc;
     Data data;
     Draw draw;
     SimulatedAnnealing simAnneal;
-    double lastTemp =0;
+    boolean firstTime=true;
 
     @FXML
     public void initialize() {
-        textArea.setEditable(false);
         gc=canvas.getGraphicsContext2D();
         draw=new Draw(canvas,gc);
         draw.clearCanvas();
@@ -43,6 +41,8 @@ public class MainController {
     }
     @FXML
     protected void runBtnJobs(){
+        firstTime=true;
+        numberOfClicks=1;
         for (Truck t: data.trucks){
             t.reset();
         }
@@ -56,6 +56,7 @@ public class MainController {
             t.nodes.addLast(data.nodes.getFirst());
         }
 
+        /*
         textArea.setText("");
         for (Truck t : data.trucks){
                 textArea.appendText(t.color+":\n");
@@ -63,6 +64,7 @@ public class MainController {
                 textArea.appendText(n.capacity+"\n");
             }
         }
+         */
         simAnneal.numberOfTrucks=data.getNumberOfUsedTrucks();
         draw.drawAll(data);
         System.out.println("BEFORE");
@@ -77,8 +79,24 @@ public class MainController {
         if(txtTempStr.isEmpty())
             showMSG("PLEASE FILL THE INITIAL TEMPERATURE FIELD");
         else {
-            double initTemp = Double.parseDouble(txtTemp.getText());
-            lastTemp=simAnneal.run(initTemp);
+            double initTemp=0.0;
+            try {
+                initTemp = Double.parseDouble(txtTemp.getText());
+            }catch (Exception e){
+                showMSG("PLEASE ENTER INTEGER VALUE.");
+                txtTemp.setText("");
+                return;
+            }
+            int numberOfIterPerButton= simAnneal.calcNumIter(initTemp);
+            if(firstTime){
+                simAnneal.run(initTemp,numberOfIterPerButton,firstTime);
+                firstTime=false;
+            }else{
+                numberOfClicks++;
+                numberOfIterPerButton*=numberOfClicks;
+                simAnneal.run(initTemp,numberOfIterPerButton,firstTime);
+            }
+            System.out.println(numberOfIterPerButton);
             draw.drawAll(data);
             System.out.println("AFTER");
             System.out.println("===========");
@@ -91,7 +109,9 @@ public class MainController {
         station=true;
         draw.clearCanvas();
         data.clearData();
-        textArea.setText("");
+        firstTime=true;
+        numberOfClicks=1;
+        //textArea.setText("");
         txtTemp.setText("");
     }
 

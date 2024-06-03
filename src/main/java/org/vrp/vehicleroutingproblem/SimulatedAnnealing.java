@@ -5,6 +5,7 @@ import java.util.Random;
 
 public class SimulatedAnnealing {
     //private final double initTemp;
+    private int iter;
     private final Data data;
     private final Random random;
     public int numberOfTrucks=0;
@@ -12,8 +13,9 @@ public class SimulatedAnnealing {
         //this.initTemp=initTemp;
         this.data=data;
         random=new Random();
+        iter=1;
     }
-    double run(double initTemp){
+    void run(double initTemp,int numberOfIterPerButton,boolean firstTime){
         ArrayList<Truck> curr=new ArrayList<>(data.trucks);
         ArrayList<Truck> best=new ArrayList<>();
         deepCopy(best,curr);
@@ -21,13 +23,13 @@ public class SimulatedAnnealing {
         deepCopy(next,curr);
         double error=0;
         double Tc;
-        int iter=1;
+        //if (firstTime) iter=1;
+        iter=1;
         while(true){
             Tc=calcTemp(iter,initTemp);
             System.out.println("TC:"+Tc);
+            if(Tc<=(0.1*initTemp)) break;
 
-            if(Tc<=2) break;
-            //if(iter>=10000) break;
             //find next
             randomSwap(next);
             error=distanceAllNodes(next)-distanceAllNodes(curr);
@@ -46,11 +48,11 @@ public class SimulatedAnnealing {
             iter++;
         }
         deepCopy(data.trucks,best);
-        return Tc;
+        System.out.println(initTemp);
     }
     private double calcTemp(int i,double T){
-        //return (T/Math.log(i));
-        return (T*Math.pow(0.99,i));
+        return (T/Math.log(i));
+        //return (T*Math.pow(0.99,i));
     }
     private double probabilityFormula(double error,double Tc){
         return Math.exp((-error)/(Tc));
@@ -74,9 +76,6 @@ public class SimulatedAnnealing {
         }
     }
     public void randomSwap(ArrayList<Truck> trucks){
-        //!TODO if performance was bad
-        // Make it to take truck only if the truck has more than 3 nodes
-
         int x=random.nextInt(numberOfTrucks);
         Truck t=trucks.get(x);
         int n1=random.nextInt(t.nodes.size()-2)+1;
@@ -93,5 +92,8 @@ public class SimulatedAnnealing {
             t.nodes.set(n1,t.nodes.get(n2));
             t.nodes.set(n2,tmp);
         }
+    }
+    public int calcNumIter(double initTemp){
+        return Math.min((int)(initTemp*0.40),(10000));
     }
 }
