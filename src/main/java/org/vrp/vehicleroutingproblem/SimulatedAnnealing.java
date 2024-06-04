@@ -9,13 +9,16 @@ public class SimulatedAnnealing {
     private final Data data;
     private final Random random;
     public int numberOfTrucks=0;
+    public boolean forceStop=false;
+    public boolean looping=false;
     public SimulatedAnnealing(Data data){
         //this.initTemp=initTemp;
         this.data=data;
         random=new Random();
         iter=1;
     }
-    void run(double initTemp,int numberOfIterPerButton,boolean firstTime){
+    void run(double initTemp){
+        looping=true;
         ArrayList<Truck> curr=new ArrayList<>(data.trucks);
         ArrayList<Truck> best=new ArrayList<>();
         deepCopy(best,curr);
@@ -23,12 +26,13 @@ public class SimulatedAnnealing {
         deepCopy(next,curr);
         double error=0;
         double Tc;
-        //if (firstTime) iter=1;
         iter=1;
         while(true){
             Tc=calcTemp(iter,initTemp);
             System.out.println("TC:"+Tc);
-            if(Tc<=(0.1*initTemp)) break;
+
+            if(Tc<=(300)) break;
+            if(forceStop) break;
 
             //find next
             randomSwap(next);
@@ -48,7 +52,7 @@ public class SimulatedAnnealing {
             iter++;
         }
         deepCopy(data.trucks,best);
-        System.out.println(initTemp);
+        System.out.println("iterations = "+iter);
     }
     private double calcTemp(int i,double T){
         return (T/Math.log(i));

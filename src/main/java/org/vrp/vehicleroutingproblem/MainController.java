@@ -18,6 +18,15 @@ public class MainController {
     private Button btnPath;
 
     @FXML
+    private Button btnStop;
+
+    @FXML
+    private Label lblFreeTrucks;
+
+    @FXML
+    private Label lblUsedTrucks;
+
+    @FXML
     private TextField txtTemp;
 
     @FXML
@@ -41,6 +50,7 @@ public class MainController {
     }
     @FXML
     protected void runBtnJobs(){
+        if (simAnneal.looping) return;
         firstTime=true;
         numberOfClicks=1;
         for (Truck t: data.trucks){
@@ -56,16 +66,9 @@ public class MainController {
             t.nodes.addLast(data.nodes.getFirst());
         }
 
-        /*
-        textArea.setText("");
-        for (Truck t : data.trucks){
-                textArea.appendText(t.color+":\n");
-            for (Node n:t.nodes){
-                textArea.appendText(n.capacity+"\n");
-            }
-        }
-         */
         simAnneal.numberOfTrucks=data.getNumberOfUsedTrucks();
+        lblFreeTrucks.setText("Free Trucks: "+(10-simAnneal.numberOfTrucks));
+        lblUsedTrucks.setText("In Use Trucks: "+(simAnneal.numberOfTrucks));
         draw.drawAll(data);
         System.out.println("BEFORE");
         System.out.println("===========");
@@ -74,12 +77,12 @@ public class MainController {
     }
     @FXML
     protected void runBtnPath(){
-        System.out.println("test");
+        if (simAnneal.looping) return;
         String txtTempStr=txtTemp.getText();
         if(txtTempStr.isEmpty())
             showMSG("PLEASE FILL THE INITIAL TEMPERATURE FIELD");
         else {
-            double initTemp=0.0;
+            final double initTemp;
             try {
                 initTemp = Double.parseDouble(txtTemp.getText());
             }catch (Exception e){
@@ -87,32 +90,33 @@ public class MainController {
                 txtTemp.setText("");
                 return;
             }
-            int numberOfIterPerButton= simAnneal.calcNumIter(initTemp);
-            if(firstTime){
-                simAnneal.run(initTemp,numberOfIterPerButton,firstTime);
-                firstTime=false;
-            }else{
-                numberOfClicks++;
-                numberOfIterPerButton*=numberOfClicks;
-                simAnneal.run(initTemp,numberOfIterPerButton,firstTime);
-            }
-            System.out.println(numberOfIterPerButton);
-            draw.drawAll(data);
-            System.out.println("AFTER");
-            System.out.println("===========");
-            System.out.println(simAnneal.distanceAllNodes(data.trucks));
-            System.out.println("===========");
+                new Thread(()->{simAnneal.run(initTemp);
+                    simAnneal.looping=false;
+                    simAnneal.forceStop=false;
+                    draw.drawAll(data);
+                    System.out.println("AFTER");
+                    System.out.println("===========");
+                    System.out.println(simAnneal.distanceAllNodes(data.trucks));
+                    System.out.println("===========");
+                }).start();
+
         }
     }
     @FXML
     protected void resetBtn(){
+        if (simAnneal.looping) return;
         station=true;
         draw.clearCanvas();
         data.clearData();
         firstTime=true;
         numberOfClicks=1;
-        //textArea.setText("");
         txtTemp.setText("");
+        lblFreeTrucks.setText("Free Trucks: 10");
+        lblUsedTrucks.setText("In Use Trucks: 0");
+    }
+    @FXML
+    protected void stopBtn(){
+        if(simAnneal.looping) simAnneal.forceStop=true;
     }
 
 
