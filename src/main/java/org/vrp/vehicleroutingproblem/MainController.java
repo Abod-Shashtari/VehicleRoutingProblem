@@ -1,5 +1,6 @@
 package org.vrp.vehicleroutingproblem;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -25,6 +26,9 @@ public class MainController {
 
     @FXML
     private Label lblUsedTrucks;
+
+    @FXML
+    private Label lblLoading;
 
     @FXML
     private TextField txtTemp;
@@ -69,6 +73,7 @@ public class MainController {
         simAnneal.numberOfTrucks=data.getNumberOfUsedTrucks();
         lblFreeTrucks.setText("Free Trucks: "+(10-simAnneal.numberOfTrucks));
         lblUsedTrucks.setText("In Use Trucks: "+(simAnneal.numberOfTrucks));
+        loading(false);
         draw.drawAll(data);
         System.out.println("BEFORE");
         System.out.println("===========");
@@ -90,14 +95,19 @@ public class MainController {
                 txtTemp.setText("");
                 return;
             }
-                new Thread(()->{simAnneal.run(initTemp);
+                loading(true);
+                new Thread(()->{
+                    simAnneal.run(initTemp);
                     simAnneal.looping=false;
                     simAnneal.forceStop=false;
-                    draw.drawAll(data);
-                    System.out.println("AFTER");
-                    System.out.println("===========");
-                    System.out.println(simAnneal.distanceAllNodes(data.trucks));
-                    System.out.println("===========");
+                    Platform.runLater(()->{
+                        loading(false);
+                        draw.drawAll(data);
+                        System.out.println("AFTER");
+                        System.out.println("===========");
+                        System.out.println(simAnneal.distanceAllNodes(data.trucks));
+                        System.out.println("===========");
+                    });
                 }).start();
 
         }
@@ -113,10 +123,19 @@ public class MainController {
         txtTemp.setText("");
         lblFreeTrucks.setText("Free Trucks: 10");
         lblUsedTrucks.setText("In Use Trucks: 0");
+        lblLoading.setText("Distance: 0");
     }
     @FXML
     protected void stopBtn(){
         if(simAnneal.looping) simAnneal.forceStop=true;
+    }
+
+    void loading(boolean v){
+        if(v){
+            lblLoading.setText("Loading ...");
+        }else{
+            lblLoading.setText("Distance: "+simAnneal.distanceAllNodes(data.trucks));
+        }
     }
 
 

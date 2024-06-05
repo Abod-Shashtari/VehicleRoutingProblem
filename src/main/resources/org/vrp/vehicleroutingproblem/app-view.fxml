@@ -14,16 +14,21 @@
       <Button fx:id="btnPath" layoutX="466.0" layoutY="86.0" mnemonicParsing="false" onAction="#runBtnPath" prefHeight="58.0" prefWidth="120.0" stylesheets="@style.css" text="Optimize" />
       <TextField fx:id="txtTemp" layoutX="466.0" layoutY="159.0" prefHeight="29.0" prefWidth="120.0" promptText="Init Temp" styleClass="input" stylesheets="@style.css" />
       <Button fx:id="btnReset" layoutX="466.0" layoutY="348.0" mnemonicParsing="false" onAction="#resetBtn" prefHeight="29.0" prefWidth="120.0" stylesheets="@style.css" text="Reset" />
-      <Label fx:id="lblFreeTrucks" layoutX="466.0" layoutY="200.0" prefHeight="29.0" prefWidth="120.0" text="Free Trucks: 10">
+      <Label fx:id="lblFreeTrucks" alignment="CENTER" layoutX="466.0" layoutY="200.0" prefHeight="29.0" prefWidth="120.0" styleClass="free" stylesheets="@style.css" text="Free Trucks: 10" textAlignment="CENTER">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>
       </Label>
-      <Label fx:id="lblUsedTrucks" layoutX="466.0" layoutY="232.0" prefHeight="29.0" prefWidth="120.0" text="In Use Trucks: 0">
+      <Label fx:id="lblUsedTrucks" alignment="CENTER" layoutX="466.0" layoutY="229.0" prefHeight="29.0" prefWidth="120.0" styleClass="inUse" stylesheets="@style.css" text="In Use Trucks: 0">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>
       </Label>
       <Button fx:id="btnStop" layoutX="466.0" layoutY="313.0" mnemonicParsing="false" onAction="#stopBtn" prefHeight="29.0" prefWidth="120.0" stylesheets="@style.css" text="Force Stop" />
+      <Label fx:id="lblLoading" alignment="CENTER" layoutX="466.0" layoutY="269.0" prefHeight="29.0" prefWidth="120.0" styleClass="loading" stylesheets="@style.css" text="Distance: 0">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>
